@@ -104,8 +104,71 @@ document.addEventListener("DOMContentLoaded", () => {
 const menuToggle = document.getElementById('menu-toggle');
 const slideMenu = document.getElementById('slide-menu');
 
-menuToggle.addEventListener('click', () => {
-    slideMenu.classList.toggle('active');
-});
+if (menuToggle && slideMenu) {
+    const menuIcon = menuToggle.querySelector('i');
+    const closeBtn = slideMenu.querySelector('.menu-close');
+    const overlay = document.getElementById('menu-overlay');
+
+    function openMenu() {
+        slideMenu.classList.add('active');
+        slideMenu.setAttribute('aria-hidden', 'false');
+        if (overlay) overlay.setAttribute('aria-hidden', 'false');
+        menuToggle.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('menu-open');
+        if (menuIcon) {
+            menuIcon.classList.remove('fa-bars');
+            menuIcon.classList.add('fa-xmark');
+        }
+        if (closeBtn) closeBtn.focus();
+    }
+
+    function closeMenu() {
+        slideMenu.classList.remove('active');
+        slideMenu.setAttribute('aria-hidden', 'true');
+        if (overlay) overlay.setAttribute('aria-hidden', 'true');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('menu-open');
+        if (menuIcon) {
+            menuIcon.classList.remove('fa-xmark');
+            menuIcon.classList.add('fa-bars');
+        }
+        menuToggle.focus();
+    }
+
+    menuToggle.addEventListener('click', () => {
+        if (slideMenu.classList.contains('active')) closeMenu(); else openMenu();
+    });
+
+    // Close when a link inside the menu is clicked
+    const slideLinks = slideMenu.querySelectorAll('a');
+    slideLinks.forEach(link => link.addEventListener('click', () => {
+        closeMenu();
+    }));
+
+    // Close via explicit close button
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => closeMenu());
+    }
+
+    // Close when clicking overlay
+    if (overlay) {
+        overlay.addEventListener('click', () => closeMenu());
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && slideMenu.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+
+    // Close menu when resizing above mobile breakpoint
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && slideMenu.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+}
+
 
 
