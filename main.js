@@ -1,9 +1,4 @@
-const headerLinks = document.querySelectorAll(".header-list a");
-headerLinks.forEach(link => {
-  if (link.href === window.location.href) {
-    link.classList.add("active");
-  }
-});
+
 
 const scrollBtn = document.querySelector(".scroll-btn");
 if (scrollBtn) {
@@ -21,12 +16,42 @@ const internalLinks = document.querySelectorAll('a[href^="#"]');
 internalLinks.forEach(link => {
   link.addEventListener("click", (e) => {
     e.preventDefault();
-    const target = document.querySelector(link.getAttribute("href"));
+    const href = link.getAttribute("href");
+    const target = document.querySelector(href);
     if (target) {
       target.scrollIntoView({ behavior: "smooth" });
+      try {
+        history.replaceState(null, '', href);
+      } catch (_) {}
     }
   });
 });
+
+// Scrollspy: update active nav links based on visible section
+(function() {
+  const sectionIds = ['#home', '#about', '#projects', '#contact'];
+  const sections = sectionIds.map(id => document.querySelector(id)).filter(Boolean);
+  const navLinks = Array.from(document.querySelectorAll('.header-list a, .slide-menu a'));
+
+  if (!sections.length || !navLinks.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = '#' + entry.target.id;
+        navLinks.forEach(a => {
+          if (a.getAttribute('href') === id || a.getAttribute('href') === id.replace('#', '')) {
+            a.classList.add('active');
+          } else {
+            a.classList.remove('active');
+          }
+        });
+      }
+    });
+  }, { root: null, rootMargin: '-30% 0px -50% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s));
+})();
 
 const form = document.getElementById("contact-form");
 const status = document.getElementById("form-status");
@@ -98,6 +123,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 600);
         });
     });
+
+    // If the page was opened with a hash, smoothly scroll to section
+    if (location.hash) {
+        const target = document.querySelector(location.hash);
+        if (target) {
+            setTimeout(() => {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }, 60);
+        }
+    }
 });
 
 
@@ -167,7 +202,14 @@ if (menuToggle && slideMenu) {
         if (window.innerWidth > 768 && slideMenu.classList.contains('active')) {
             closeMenu();
         }
+        // If the page is resized and the menu ends up in a bad state under small widths enforce closed state
+        if (window.innerWidth <= 480 && slideMenu.classList.contains('active')) {
+            closeMenu();
+        }
     });
+
+    // Ensure menu is closed on initial load to avoid stray visible state on very small screens
+    closeMenu();
 }
 
 

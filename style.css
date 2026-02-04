@@ -10,6 +10,17 @@
     --max-width: 1200px;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+/* Prevent images from overflowing and avoid horizontal scrolling */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
 body {
     padding-top: var(--header-height);
     -webkit-font-smoothing: antialiased;
@@ -249,16 +260,41 @@ header {
 .photo-container {
     position: relative;
     display: inline-block;
-    padding: 10px;
+    padding: 8px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    width: -moz-fit-content;
+    width: fit-content; /* shrink to image width + padding */
+    max-width: 100%;
 }
 
 .photo-container img {
-    width: 260px;
+    width: 100%;
+    max-width: 260px; /* keeps image from growing beyond desktop size */
+    height: auto;
     border-radius: 8px;
     display: block;
+    object-fit: cover;
+}
+
+/* Tighter padding and smaller images on narrow screens */
+@media (max-width: 768px) {
+    .photo-container {
+        padding: 6px;
+    }
+    .photo-container img {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .photo-container {
+        padding: 4px;
+    }
+    .photo-container img {
+        max-width: 140px;
+    }
 }
 
 .tape {
@@ -607,21 +643,23 @@ header {
     color: #111;
 }
 
-/* Slide-in menu */
+/* Slide-in menu (use transform to avoid layout overflow) */
 .slide-menu {
     position: fixed;
     top: 0;
-    right: -100%;
+    right: 0;
     width: 320px;
     max-width: 100%;
     height: 100%;
     background-color: rgba(17,17,17,0.98);
     color: #fff;
-    transition: right 0.28s ease, transform 0.28s ease;
+    transform: translateX(100%); /* hidden by default */
+    transition: transform 0.28s ease;
     z-index: 2000;
     padding-top: 80px;
     box-shadow: -6px 0 18px rgba(0,0,0,0.35);
     display: block;
+    will-change: transform;
 }
 
 .slide-menu .menu-close {
@@ -661,17 +699,22 @@ header {
     background: rgba(255,255,255,0.03);
 }
 
-/* ARIA hidden states are used to slide the menu in/out */
+/* ARIA hidden states are used to slide the menu in/out (transform based) */
 .slide-menu[aria-hidden="true"] {
-    right: -100%;
+    transform: translateX(100%);
 }
 .slide-menu[aria-hidden="false"] {
-    right: 0;
+    transform: translateX(0);
 }
 
 /* When menu is open, prevent body scrolling */
 body.menu-open {
     overflow: hidden;
+}
+
+/* Prevent horizontal overflow on the whole site */
+html, body {
+    overflow-x: hidden;
 }
 
 /* Dim overlay behind the slide menu */
@@ -693,12 +736,12 @@ body.menu-open {
 @media (max-width: 480px) {
     .slide-menu {
         width: 100%;
-        right: -100%;
-        padding-top: 110px;
+        transform: translateX(100%);
+        padding-top: 88px; /* match compact header height */
     }
     .slide-menu .menu-close {
         right: 16px;
-        top: 16px;
+        top: 12px;
         font-size: 1.6rem;
     }
 }
@@ -805,19 +848,29 @@ body.menu-open {
 
 /* ===== Phones ===== */
 @media (max-width: 480px) {
+    /* Keep header compact and on one line so the menu button stays top-right */
     header {
-        padding: 15px 10px;
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
+        padding: 12px 10px;
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .logo {
         font-size: 18px;
+        margin-left: 6px;
+    }
+
+    /* prevent logo from wrapping on narrow screens */
+    .logo h3 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .menu-toggle {
-        align-self: flex-end;
+        align-self: auto;
         margin-right: 8px;
     }
 
@@ -832,7 +885,7 @@ body.menu-open {
 
     .home {
         padding: 1rem 1rem 0 1rem;
-        margin: 90px 15px;
+        margin: 90px 15px 20px 15px;
     }
 
     .socials-icon {
@@ -847,14 +900,21 @@ body.menu-open {
         gap: 15px;
     }
 
+    /* Make about header area stack cleanly */
+    .about-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
     .photo-container img {
-        width: 150px;
+        width: 140px;
     }
 
     .about,
     .project,
     .contact {
-        margin: 160px 15px;
+        margin: 120px 15px;
     }
 
     .contact-form {
@@ -874,13 +934,9 @@ a:focus, button:focus, .btn:focus, .menu-toggle:focus {
     border-radius: 6px;
 }
 
-/* Slide-menu aria-hidden states */
-.slide-menu[aria-hidden="true"] {
-    right: -320px;
-}
-.slide-menu[aria-hidden="false"] {
-    right: 0;
-}
+/* Slide-menu aria-hidden states (updated to use transform) */
+.slide-menu[aria-hidden="true"] { transform: translateX(100%); }
+.slide-menu[aria-hidden="false"] { transform: translateX(0); }
 
 /* Make menu toggle larger on touch devices */
 .menu-toggle {
@@ -891,7 +947,7 @@ a:focus, button:focus, .btn:focus, .menu-toggle:focus {
 }
 
 @media (max-width: 480px) {
-    :root { --header-height: 110px; }
+    :root { --header-height: 88px; }
 }
 
 /* Additional responsive tweaks (tablet & phone) */
