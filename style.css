@@ -255,6 +255,19 @@ header {
 
 .about-info2 {
     display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap; /* allow wrapping on narrow widths */
+}
+
+.about-text {
+    flex: 1 1 320px; /* text grows, but has a sensible min width */
+    min-width: 220px;
+}
+
+.photo-container {
+    flex: 0 0 auto; /* don't stretch the photo container */
+    max-width: 320px; /* ensure photo container doesn't become too wide */
 }
 
 .photo-container {
