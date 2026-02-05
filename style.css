@@ -99,16 +99,33 @@ header {
 }
 
 .home {
-    padding: 6rem 4rem 2rem;
+    padding: 6rem 0 2rem; /* remove horizontal padding so max-width block is perfectly centered */
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
-    min-height: calc(100vh - 80px);
+    min-height: calc(100vh - var(--header-height));
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* Use a fluid text column and a fixed-range image column, then center the grid for symmetry */
+    /* make text column slightly larger so visual center aligns better */
+    grid-template-columns: 1.25fr minmax(160px, 420px); /* increase text column fraction to visually center content */
+    justify-content: center; /* centers the two-column block in the container */
     align-items: center;
-    gap: 1.5rem;
+    gap: 3rem; /* balanced gap between text and image */
     font-family: "Poppins", sans-serif;
+}
+
+.home-text {
+    max-width: 640px; /* constrain long lines */
+    padding-right: 1rem; /* breathing room on the right */
+}
+
+.home-text h2, .home-text h3 {
+    line-height: 1.05;
+}
+
+.home-text p {
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
 }
 
 .home-text h2 {
@@ -117,21 +134,14 @@ header {
 }
 
 .home-text h3 {
-    position: relative;
-    padding-left: 6rem;
     font-weight: 500;
     margin-bottom: 1rem;
-}
+    padding-left: 0; /* removed decorative left line */
+} 
 
 .home-text h3::before {
-    content: "";
-    position: absolute;
-    width: 80px;
-    height: 2px;
-    background-color: #1e1e24;
-    left: 0;
-    top: 1rem;
-}
+    display: none; /* hide decorative line */
+} 
 
 .home-text p {
     margin-bottom: 2rem;
@@ -289,6 +299,43 @@ header {
     border-radius: 8px;
     display: block;
     object-fit: cover;
+}
+
+/* Home-specific photo container and sizing (modifier class) */
+.photo-container--home {
+    /* keep the existing card visuals but constrain height and center the image */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 360px;
+    max-height: 420px; /* cap the card height so there isn't excessive white space */
+    padding: 8px; /* keep same padding as other photo containers */
+}
+
+.photo-container--home img {
+    /* make the image scale to the container while preserving its aspect */
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* prevents distortion and keeps full image visible */
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .photo-container--home {
+        max-width: 260px;
+        max-height: 340px;
+        padding: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .photo-container--home {
+        max-width: 160px;
+        max-height: 220px;
+        padding: 4px;
+    }
 }
 
 /* Tighter padding and smaller images on narrow screens */
@@ -645,6 +692,62 @@ header {
     }
 }
 
+@media (max-width: 480px) {
+    /* Fix contact form layout on small phones */
+    .contact-content {
+        gap: 20px;
+    }
+
+    .contact-info,
+    .contact-form {
+        min-width: 0; /* allow the blocks to shrink to 100% */
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .contact-form {
+        padding: 18px;
+        border-radius: 12px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+
+    .contact-form button.btn {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+
+    /* Center home content and photo on small phones */
+    .home {
+        grid-template-columns: 1fr; /* single column */
+        padding: 1.5rem;
+        text-align: center;
+        align-items: center;   /* vertical centering */
+        justify-items: center; /* center children horizontally */
+        min-height: calc(100vh - var(--header-height));
+    }
+
+    .home-text {
+        padding-right: 0;
+        max-width: 100%;
+    }
+
+    .home-btn {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .photo-container--home {
+        margin: 0 auto;
+    }
+}
+
 .fade-in-element {
     opacity: 0;
     transform: translateY(20px);
@@ -791,7 +894,7 @@ html, body {
     }
 
     .home {
-        padding: 2rem 3rem 0 3rem;
+        padding: 2rem 0 0; /* remove horizontal padding for accurate centering */
     }
 
     .about,
@@ -805,8 +908,13 @@ html, body {
 @media (max-width: 900px) {
     .home {
         grid-template-columns: 1fr;
-        padding: 2rem 1.5rem;
+        padding: 2rem 0 0; /* remove horizontal padding so block centers exactly */
         text-align: center;
+    }
+
+    .home-text {
+        max-width: 100%;
+        padding: 0 1rem 1.5rem 1rem; /* ensure side padding on narrow screens */
     }
 
     .home-img img {
@@ -840,7 +948,7 @@ html, body {
     }
 
     .home {
-        padding: 1.5rem 1rem;
+        padding: 1.5rem 0; /* remove horizontal padding so the centered block stays visually centered */
     }
 
     .socials-icon {
@@ -853,7 +961,7 @@ html, body {
 
     .home-text h3 {
         font-size: 1.2rem;
-        padding-left: 3rem;
+        padding-left: 0;
     }
 
     .about,
@@ -905,7 +1013,7 @@ html, body {
 
     .home-text h3 {
         font-size: 1rem;
-        padding-left: 1.5rem;
+        padding-left: 0;
     }
 
     .home {
