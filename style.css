@@ -99,24 +99,21 @@ header {
 }
 
 .home {
-    padding: 6rem 0 2rem; /* remove horizontal padding so max-width block is perfectly centered */
+    padding: 6rem 2rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
     min-height: calc(100vh - var(--header-height));
-    display: grid;
-    /* Use a fluid text column and a fixed-range image column, then center the grid for symmetry */
-    /* make text column slightly larger so visual center aligns better */
-    grid-template-columns: 1.25fr minmax(160px, 420px); /* increase text column fraction to visually center content */
-    justify-content: center; /* centers the two-column block in the container */
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 3rem; /* balanced gap between text and image */
+    gap: 4rem;
     font-family: "Poppins", sans-serif;
 }
 
 .home-text {
-    max-width: 640px; /* constrain long lines */
-    padding-right: 1rem; /* breathing room on the right */
+    flex: 1;
+    max-width: 600px;
 }
 
 .home-text h2, .home-text h3 {
@@ -136,11 +133,11 @@ header {
 .home-text h3 {
     font-weight: 500;
     margin-bottom: 1rem;
-    padding-left: 0; /* removed decorative left line */
+    padding-left: 0;
 } 
 
 .home-text h3::before {
-    display: none; /* hide decorative line */
+    display: none;
 } 
 
 .home-text p {
@@ -267,17 +264,17 @@ header {
     display: flex;
     gap: 2rem;
     align-items: center;
-    flex-wrap: wrap; /* allow wrapping on narrow widths */
+    flex-wrap: wrap;
 }
 
 .about-text {
-    flex: 1 1 320px; /* text grows, but has a sensible min width */
+    flex: 1 1 320px;
     min-width: 220px;
 }
 
 .photo-container {
-    flex: 0 0 auto; /* don't stretch the photo container */
-    max-width: 320px; /* ensure photo container doesn't become too wide */
+    flex: 0 0 auto;
+    max-width: 320px;
 }
 
 .photo-container {
@@ -288,37 +285,36 @@ header {
     border-radius: 10px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     width: -moz-fit-content;
-    width: fit-content; /* shrink to image width + padding */
+    width: fit-content;
     max-width: 100%;
 }
 
 .photo-container img {
     width: 100%;
-    max-width: 260px; /* keeps image from growing beyond desktop size */
+    max-width: 260px;
     height: auto;
     border-radius: 8px;
     display: block;
     object-fit: cover;
 }
 
-/* Home-specific photo container and sizing (modifier class) */
+/* Home-specific photo container */
 .photo-container--home {
-    /* keep the existing card visuals but constrain height and center the image */
+    flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     max-width: 360px;
-    max-height: 420px; /* cap the card height so there isn't excessive white space */
-    padding: 8px; /* keep same padding as other photo containers */
+    max-height: 420px;
+    padding: 8px;
 }
 
 .photo-container--home img {
-    /* make the image scale to the container while preserving its aspect */
     max-width: 100%;
     max-height: 100%;
     width: auto;
     height: auto;
-    object-fit: contain; /* prevents distortion and keeps full image visible */
+    object-fit: contain;
     display: block;
 }
 
@@ -338,7 +334,6 @@ header {
     }
 }
 
-/* Tighter padding and smaller images on narrow screens */
 @media (max-width: 768px) {
     .photo-container {
         padding: 6px;
@@ -668,9 +663,13 @@ header {
     }
 
     .home {
-        grid-template-columns: 1fr;
+        flex-direction: column;
         padding: 2rem;
         text-align: center;
+    }
+
+    .home-text {
+        max-width: 100%;
     }
 
     .home-img img {
@@ -700,7 +699,7 @@ header {
 
     .contact-info,
     .contact-form {
-        min-width: 0; /* allow the blocks to shrink to 100% */
+        min-width: 0;
         width: 100%;
         max-width: 100%;
     }
@@ -723,16 +722,15 @@ header {
 
     /* Center home content and photo on small phones */
     .home {
-        grid-template-columns: 1fr; /* single column */
+        flex-direction: column;
         padding: 1.5rem;
         text-align: center;
-        align-items: center;   /* vertical centering */
-        justify-items: center; /* center children horizontally */
+        align-items: center;
+        justify-content: center;
         min-height: calc(100vh - var(--header-height));
     }
 
     .home-text {
-        padding-right: 0;
         max-width: 100%;
     }
 
@@ -771,7 +769,7 @@ header {
     color: #111;
 }
 
-/* Slide-in menu (use transform to avoid layout overflow) */
+/* Slide-in menu */
 .slide-menu {
     position: fixed;
     top: 0;
@@ -781,7 +779,7 @@ header {
     height: 100%;
     background-color: rgba(17,17,17,0.98);
     color: #fff;
-    transform: translateX(100%); /* hidden by default */
+    transform: translateX(100%);
     transition: transform 0.28s ease;
     z-index: 2000;
     padding-top: 80px;
@@ -827,7 +825,6 @@ header {
     background: rgba(255,255,255,0.03);
 }
 
-/* ARIA hidden states are used to slide the menu in/out (transform based) */
 .slide-menu[aria-hidden="true"] {
     transform: translateX(100%);
 }
@@ -835,17 +832,14 @@ header {
     transform: translateX(0);
 }
 
-/* When menu is open, prevent body scrolling */
 body.menu-open {
     overflow: hidden;
 }
 
-/* Prevent horizontal overflow on the whole site */
 html, body {
     overflow-x: hidden;
 }
 
-/* Dim overlay behind the slide menu */
 .menu-overlay {
     position: fixed;
     inset: 0;
@@ -863,9 +857,9 @@ html, body {
 
 @media (max-width: 480px) {
     .slide-menu {
-        width: 33.333%;
+        width: 280px;
         transform: translateX(100%);
-        padding-top: 88px; /* match compact header height */
+        padding-top: 88px;
     }
     .slide-menu .menu-close {
         right: 16px;
@@ -875,7 +869,6 @@ html, body {
 }
 
 @media screen and (max-width: 768px) {
-
     .header-list,
     .header-list-icon {
         display: none;
@@ -894,7 +887,7 @@ html, body {
     }
 
     .home {
-        padding: 2rem 0 0; /* remove horizontal padding for accurate centering */
+        padding: 2rem;
     }
 
     .about,
@@ -904,17 +897,16 @@ html, body {
     }
 }
 
-/* ===== Tablets / iPad Portrait ===== */
 @media (max-width: 900px) {
     .home {
-        grid-template-columns: 1fr;
-        padding: 2rem 0 0; /* remove horizontal padding so block centers exactly */
+        flex-direction: column;
+        padding: 2rem;
         text-align: center;
     }
 
     .home-text {
         max-width: 100%;
-        padding: 0 1rem 1.5rem 1rem; /* ensure side padding on narrow screens */
+        padding: 0 1rem 1.5rem 1rem;
     }
 
     .home-img img {
@@ -940,7 +932,6 @@ html, body {
     }
 }
 
-/* ===== Small Tablets / Large Phones ===== */
 @media (max-width: 768px) {
     .projects-container {
         grid-template-columns: 1fr;
@@ -948,7 +939,7 @@ html, body {
     }
 
     .home {
-        padding: 1.5rem 0; /* remove horizontal padding so the centered block stays visually centered */
+        padding: 1.5rem;
     }
 
     .socials-icon {
@@ -979,9 +970,7 @@ html, body {
     }
 }
 
-/* ===== Phones ===== */
 @media (max-width: 480px) {
-    /* Keep header compact and on one line so the menu button stays top-right */
     header {
         padding: 12px 10px;
         flex-direction: row;
@@ -995,7 +984,6 @@ html, body {
         margin-left: 6px;
     }
 
-    /* prevent logo from wrapping on narrow screens */
     .logo h3 {
         white-space: nowrap;
         overflow: hidden;
@@ -1033,7 +1021,6 @@ html, body {
         gap: 15px;
     }
 
-    /* Make about header area stack cleanly */
     .about-info {
         flex-direction: column;
         align-items: center;
@@ -1060,18 +1047,12 @@ html, body {
     }
 }
 
-/* Accessibility & focus styles */
 a:focus, button:focus, .btn:focus, .menu-toggle:focus {
     outline: 3px solid rgba(0,187,255,0.20);
     outline-offset: 2px;
     border-radius: 6px;
 }
 
-/* Slide-menu aria-hidden states (updated to use transform) */
-.slide-menu[aria-hidden="true"] { transform: translateX(100%); }
-.slide-menu[aria-hidden="false"] { transform: translateX(0); }
-
-/* Make menu toggle larger on touch devices */
 .menu-toggle {
     background: none;
     border: none;
@@ -1083,7 +1064,6 @@ a:focus, button:focus, .btn:focus, .menu-toggle:focus {
     :root { --header-height: 88px; }
 }
 
-/* Additional responsive tweaks (tablet & phone) */
 @media (max-width: 1024px) {
     header {
         padding: 18px 24px;
