@@ -662,7 +662,7 @@ header {
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 899px) {
     .contact-content {
         flex-direction: column;
     }
@@ -863,7 +863,7 @@ html, body {
 
 @media (max-width: 480px) {
     .slide-menu {
-        width: 100%;
+        width: 33.333%;
         transform: translateX(100%);
         padding-top: 88px; /* match compact header height */
     }
